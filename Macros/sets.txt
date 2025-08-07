@@ -1,0 +1,10 @@
+  "python.defaultInterpreterPath": "/home/leandropaolo1/Documents/FreeCAD/squashfs-root/usr/bin/freecadcmd",
+  "python.analysis.extraPaths": [
+    "/home/leandropaolo1/Documents/FreeCAD/squashfs-root/usr/lib/python3.11/site-packages",
+    "/home/leandropaolo1/Documents/FreeCAD/squashfs-root/usr/share/freecad/Mod/Part",
+    "/home/leandropaolo1/Documents/FreeCAD/squashfs-root/usr/share/freecad/Mod/Draft",
+    "/home/leandropaolo1/Documents/FreeCAD/squashfs-root/usr/share/freecad/Mod/Sketcher",
+    "/home/leandropaolo1/Documents/FreeCAD/squashfs-root/usr/share/freecad/Mod/ProfileLib"
+  ],
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.analysis.diagnosticMode": "workspace"
