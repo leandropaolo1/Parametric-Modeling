@@ -1,19 +1,22 @@
-import time, os, traceback
+import os, time, threading, traceback
 
-WATCHED_SCRIPT = "/home/leandropaolo1/Documents/VSCODE/Parametric-Modeling/FreecadSeries/Topo3D/remote_script.py"
-
-def watch_and_run():
-    print("🔁 Watching for:", WATCHED_SCRIPT)
+WATCHED_SCRIPT = "/home/leandropaolo1/Documents/VSCODE/Parametric-Modeling/FreecadSeries/Macros/HoneyComb001.py"
+    
+def geometry_push_worker():
+    print("🔁 [GeometryPush] Watching:", WATCHED_SCRIPT)
     while True:
-        if os.path.exists(WATCHED_SCRIPT):
-            try:
+        try:
+            if os.path.exists(WATCHED_SCRIPT):
                 with open(WATCHED_SCRIPT, 'r') as f:
                     code = f.read()
-                print("🚀 Executing remote_script.py...")
+                print("🚀 [GeometryPush] Executing remote_script.py...")
                 exec(code, globals())
                 os.remove(WATCHED_SCRIPT)
-            except Exception as e:
-                print("❌ Error running script:\n", traceback.format_exc())
+        except Exception:
+            print("❌ [GeometryPush] Error:\n", traceback.format_exc())
         time.sleep(1)
 
-watch_and_run()
+# Run watcher in a separate thread so it doesn't block FreeCAD GUI
+thread = threading.Thread(target=geometry_push_worker, daemon=True)
+thread.start()
+print("✅ [GeometryPush] Running in background.")
