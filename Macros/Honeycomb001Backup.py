@@ -173,17 +173,9 @@ def alignShapes(fusedArrays, extrudedOffset):
     alignShapeFace(fusedArrays, 7, extrudedOffset, 0)
 
         
-def _unique_name(doc, base="ExtrudedHexagon"):
-    name = base
-    i = 1
-    while doc.getObject(name) is not None:
-        i += 1
-        name = f"{base}{i:03d}"
-    return name
-
 def createShapeArray(
         offset2DZPos: float,
-        selMidPoint,
+        selMidPoint: float,
         xInterval: float,
         yInterval: float,
         countX: int,
@@ -194,53 +186,45 @@ def createShapeArray(
         spreadsheetName: str,
         group=None):
 
-    doc = App.ActiveDocument
-    if doc is None:
-        raise RuntimeError("No active FreeCAD document.")
-
-    # 1) Hex profile
-    honeycombHexagon = doc.addObject("Part::RegularPolygon", "HoneycombHexagon")
+    # Create hexagon
+    honeycombHexagon = App.ActiveDocument.addObject(
+        "Part::RegularPolygon", "HoneycombHexagon")
     if group:
         group.addObject(honeycombHexagon)
     honeycombHexagon.Polygon = 6
     honeycombHexagon.setExpression('Circumradius', f"{spreadsheetName}.radius")
     honeycombHexagon.Visibility = False
-    doc.recompute()
 
-    # 2) Create extrusion with a guaranteed unique name, set Base immediately
-    extruded_name = _unique_name(doc, "ExtrudedHexagon")
-    extruded = doc.addObject('Part::Extrusion', extruded_name)
-
+    # Create extrusion of hexagon
+    extrudedHexagonObject = App.ActiveDocument.addObject(
+        'Part::Extrusion', 'ExtrudedHexagon')
     if group:
-        group.addObject(extruded)
+        group.addObject(extrudedHexagonObject)
+    extrudedHexagonObject.Base = honeycombHexagon
+    extrudedHexagonObject.setExpression('LengthFwd', f"{spreadsheetName}.height")
+    extrudedHexagonObject.Solid = True
+    extrudedHexagonObject.setExpression('Placement.Base.x', f"{spreadsheetName}.tweakX")
+    extrudedHexagonObject.setExpression('Placement.Base.y', f"{spreadsheetName}.tweakY")
 
-    # Set Base right away to avoid "No object linked"
-    extruded.Base = honeycombHexagon
-    extruded.DirMode = "Normal"
-    extruded.Solid = True
-    doc.recompute()
-
-    # Now safely add expressions/placements
-    extruded.setExpression('LengthFwd', f"{spreadsheetName}.height")
-    extruded.setExpression('Placement.Base.x', f"{spreadsheetName}.tweakX")
-    extruded.setExpression('Placement.Base.y', f"{spreadsheetName}.tweakY")
-    doc.recompute()
-
-    # 3) Arrays
+    # Create the two orthogonal arrays
     xvector = App.Vector(xInterval, 0, 0)
     yvector = App.Vector(0, yInterval, 0)
 
     row1Array = Draft.make_ortho_array(
-        extruded, v_x=xvector, v_y=yvector,
-        n_x=countX, n_y=countY, use_link=False)
+        extrudedHexagonObject,
+        v_x=xvector, v_y=yvector,
+        n_x=countX, n_y=countY,
+        use_link=False)
 
     row2Array = Draft.make_ortho_array(
-        extruded, v_x=xvector, v_y=yvector,
-        n_x=countX, n_y=countY, use_link=False)
+        extrudedHexagonObject,
+        v_x=xvector, v_y=yvector,
+        n_x=countX, n_y=countY,
+        use_link=False)
 
-    doc.recompute()
+    App.ActiveDocument.recompute()
 
-    # 4) Place arrays (z first so recompute sees a valid placement)
+    # Position arrays
     row1Array.Placement.Base.z = offset2DZPos
     row2Array.Placement = App.Placement(
         App.Vector(
@@ -260,38 +244,35 @@ def createShapeArray(
         arr.setExpression('NumberX', f"{spreadsheetName}.countX")
         arr.setExpression('NumberY', f"{spreadsheetName}.countY")
 
-    # Colors
+    # Set colors
     row1Array.ViewObject.ShapeColor = (255, 16, 240)  # pink
     row2Array.ViewObject.ShapeColor = (191, 255, 0)   # lime
 
-    # 5) Fuse arrays
-    fused = doc.addObject("Part::MultiFuse", "Fused_Arrays")
-    fused.Shapes = [row1Array, row2Array]
+    # Fuse arrays
+    fusedArrys = App.ActiveDocument.addObject("Part::MultiFuse", "Fused_Arrays")
+    fusedArrys.Shapes = [row1Array, row2Array]
     if group:
-        group.addObject(fused)
+        group.addObject(fusedArrys)
 
     row1Array.Visibility = False
     row2Array.Visibility = False
 
-    doc.recompute()
+    App.ActiveDocument.recompute()
     Gui.SendMsgToActiveView("ViewFit")
 
-    # 6) Center fused arrays on selected face
-    arraysMidPoint = fused.Shape.BoundBox.Center
-    fused.Placement.Base = App.Vector(
+    # Center fused arrays on selected face
+    arraysMidPoint = fusedArrys.Shape.BoundBox.Center
+    fusedArrys.Placement.Base = App.Vector(
         selMidPoint.x - arraysMidPoint.x,
         selMidPoint.y - arraysMidPoint.y)
 
     Gui.SendMsgToActiveView("ViewFit")
 
-    # 7) Clean the original polygon (reduces tree clutter)
-    try:
-        doc.removeObject(honeycombHexagon.Name)
-    except Exception:
-        pass
-    doc.recompute()
+    # Remove the original hexagon sketch to clean up tree
+    App.ActiveDocument.removeObject(honeycombHexagon.Name)
+    App.ActiveDocument.recompute()
 
-    return fused
+    return fusedArrys
 
 def main():
     # Creates Folder/Group to hold all generated objects
