@@ -8,6 +8,7 @@ import Part
 import GuiDocument
 import FreeCADGui as Gui
 
+
 hexSeparation       = .2
 hexExtrusion        = 5
 hexRadius           = 2
@@ -239,68 +240,6 @@ class ShapePattern():
         return extruded
 
 
-class Plane():
-    def __init__(self):
-        pass
-    
-    def createShapeBinder(self):
-        selected_items = Gui.Selection.getSelectionEx()
-        if not selected_items or not selected_items[0].SubObjects:
-            raise Exception("Error: Select a face to create the honeycomb grid on.")
-
-
-        selected_item = selected_items[0]
-        doc = App.ActiveDocument
-        body = doc.getObject('Body')
-        subShapeBinder = body.newObject('PartDesign::SubShapeBinder', 'Binder')
-        subShapeBinder.Support = [
-            (selected_item.Object, selected_item.SubElementNames[0])]
-        doc.recompute()
-        subShapeBinder.ViewObject.Visibility = True
-        
-        return subShapeBinder
-
-
-    def createOffset2D(self, subShapeBinder):
-        offset2D = App.activeDocument().addObject('Part::Offset2D', 'Offset2D')
-        offset2D.Source = subShapeBinder
-        offset2D.setExpression('Value', f'{userSheetLabel}.planeOffset')
-        App.activeDocument().recompute()
-        return offset2D
-
-
-    def extrude(shape, length):
-        extruded = App.ActiveDocument.addObject('Part::Extrusion', 'Extruded')
-        extruded.Base = shape
-        extruded.DirMode = "Normal"
-        extruded.LengthFwd = length if length > 0 else 0
-        extruded.LengthRev = -length if length < 0 else 0
-        extruded.Solid = True
-        App.ActiveDocument.recompute()
-        return extruded
-
-
-    def alignShapeFace(obj1, faceIndex1, obj2, faceIndex2):
-        face1 = obj1.Shape.Faces[faceIndex1]
-        face2 = obj2.Shape.Faces[faceIndex2]
-        
-        normal1 = face1.normalAt(0.5, 0.5)
-        normal2 = face2.normalAt(0.5, 0.5)
-        rotation_axis = normal1.cross(normal2)
-        if rotation_axis.Length == 0:
-            rotation_axis = App.Vector(1, 0, 0)
-        rotation_angle = normal1.getAngle(normal2)
-        rotation = App.Rotation(rotation_axis, math.degrees(rotation_angle))
-        obj1.Placement.Rotation = rotation.multiply(obj1.Placement.Rotation)
-        App.ActiveDocument.recompute()
-        
-        center1 = face1.CenterOfMass
-        center2 = face2.CenterOfMass
-        translation = center2 - center1
-        obj1.Placement.Base += translation
-        App.ActiveDocument.recompute()
-
-
 class Folders():
     def __init__(self):
         pass
@@ -365,13 +304,93 @@ class Folders():
 
 
 
+class Plane():
+    def __init__(self):
+        pass
+    
+    def createShapeBinder(self):
+        selected_items = Gui.Selection.getSelectionEx()
+        if not selected_items or not selected_items[0].SubObjects:
+            raise Exception("Error: Select a face to create the honeycomb grid on.")
+
+
+        selected_item = selected_items[0]
+        doc = App.ActiveDocument
+        body = doc.getObject('Body')
+        subShapeBinder = body.newObject('PartDesign::SubShapeBinder', 'Binder')
+        subShapeBinder.Support = [
+            (selected_item.Object, selected_item.SubElementNames[0])]
+        doc.recompute()
+        subShapeBinder.ViewObject.Visibility = True
+        
+        return subShapeBinder
+
+
+    def createOffset2D(self, subShapeBinder):
+        offset2D = App.activeDocument().addObject('Part::Offset2D', 'Offset2D')
+        offset2D.Source = subShapeBinder
+        offset2D.setExpression('Value', f'{userSheetLabel}.planeOffset')
+        App.activeDocument().recompute()
+        return offset2D
+
+
+    def extrude(self, shape, length = None, spreadsheet = None):
+        print(type(spreadsheet))
+        """
+        length:
+        - number / Quantity  -> extrudes forward if > 0, reverse if < 0
+        - str (expression)   -> evaluated by FreeCAD; forward = max(expr, 0 mm),
+                                reverse = max(-expr, 0 mm)
+        """
+        extruded = App.ActiveDocument.addObject('Part::Extrusion', 'Extruded')
+        extruded.Base = shape
+        extruded.DirMode = "Normal"
+        extruded.Solid = True
+
+        if length:
+            L = float(length) if hasattr(length, 'Value') else float(length)
+            extruded.LengthFwd = L if L > 0 else 0
+            extruded.LengthRev = -L if L < 0 else 0
+            return
+
+        
+        length = float(spreadsheet.height) # type: ignore
+        sheet_label = spreadsheet.Name  # type: ignore
+        expr_mm = f"({sheet_label}.height * 1 mm)"
+        extruded.setExpression('LengthFwd', f"max({expr_mm}, 0 mm)")
+        extruded.setExpression('LengthRev', f"max(-{expr_mm}, 0 mm)")
+
+
+    @staticmethod
+    def alignShapeFace(obj1, faceIndex1, obj2, faceIndex2):
+        import math
+        face1 = obj1.Shape.Faces[faceIndex1]
+        face2 = obj2.Shape.Faces[faceIndex2]
+
+        normal1 = face1.normalAt(0.5, 0.5)
+        normal2 = face2.normalAt(0.5, 0.5)
+        rotation_axis = normal1.cross(normal2)
+        if rotation_axis.Length == 0:
+            rotation_axis = App.Vector(1, 0, 0)
+        rotation_angle = normal1.getAngle(normal2)
+        rotation = App.Rotation(rotation_axis, math.degrees(rotation_angle))
+        obj1.Placement.Rotation = rotation.multiply(obj1.Placement.Rotation)
+        App.ActiveDocument.recompute()
+
+        center1 = face1.CenterOfMass
+        center2 = face2.CenterOfMass
+        translation = center2 - center1
+        obj1.Placement.Base += translation
+        App.ActiveDocument.recompute()
+
+
 def main():
     sheet = SpreadSheet()
-    userSheet = sheet.userSpreadSheet()
-
+    userSpreadsheet = sheet.userSpreadSheet()
     subShapeBinder = Plane()
     
     offset2D = subShapeBinder.createOffset2D(subShapeBinder.createShapeBinder())
+    subShapeBinder.extrude(offset2D, spreadsheet=userSpreadsheet)
     #sheet.autoGeneratedSheet(offset2D, planeOffset_value=planeOffset)
     #offset2D.setExpression('Value', f'{autoGeneratedLabel}.planeOffset')
 
