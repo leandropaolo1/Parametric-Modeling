@@ -229,7 +229,7 @@ class ShapePattern():
 
         return fusedArrys
 
-
+    @staticmethod
     def extrude(shape, length):
         extruded = App.ActiveDocument.addObject('Part::Extrusion', 'Extruded')
         extruded.Base = shape
