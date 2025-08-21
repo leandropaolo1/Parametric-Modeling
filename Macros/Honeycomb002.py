@@ -143,66 +143,7 @@ class ShapePattern():
         self.type = type or 'hexagons'   # honor the arg, default if None
         self.fusedArrays = None
 
-    def alignShapes(self):
-        import math
-        doc = App.ActiveDocument
-        if not self.fusedArrays:
-            return
 
-        # --- stop expressions from fighting placement
-        for obj in [getattr(self, "_hex_extrude", None), *(getattr(self, "_arrays", ()) or [])]:
-            if not obj: 
-                continue
-            for key in ('Placement.Base.x','Placement.Base.y','Placement.Base.z','Placement'):
-                try: obj.clearExpression(key)
-                except Exception: pass
-
-        # --- use the binder's baked face (global)
-        binder = self.offset2D.Source
-        if not hasattr(binder, "Shape") or not binder.Shape.Faces:
-            return
-        face = binder.Shape.Faces[0]
-        # global normal & point
-        gp = binder.getGlobalPlacement()
-        n = gp.Rotation.multVec(face.normalAt(0.5,0.5));  n.normalize()
-        p0 = gp.multVec(face.CenterOfMass)
-
-        # stable in-plane direction
-        gx = App.Vector(1,0,0)
-        u = gx - n.multiply(gx.dot(n))
-        if u.Length < 1e-9:
-            gx = App.Vector(0,1,0); u = gx - n.multiply(gx.dot(n))
-        u.normalize()
-
-        # --- absolute orientation: +Z -> n, then untwist so +X -> u
-        pl = self.fusedArrays.Placement
-        self.fusedArrays.Placement = App.Placement(pl.Base, App.Rotation())
-        Rz = App.Rotation(App.Vector(0,0,1), n)
-        x_after = Rz.multVec(App.Vector(1,0,0))
-        s = n.dot(x_after.cross(u)); c = x_after.dot(u)
-        twist = math.degrees(math.atan2(s, c))
-        self.fusedArrays.Placement.Rotation = App.Rotation(n, twist).multiply(Rz)
-
-        # --- seat lowest vertex onto the face plane
-        curP = self.fusedArrays.Placement
-        verts = [v.Point for v in self.fusedArrays.Shape.Vertexes]
-        min_proj = min(n.dot(curP.multVec(v)) for v in verts)
-        lift = n.dot(p0) - min_proj
-        self.fusedArrays.Placement.Base = self.fusedArrays.Placement.Base + n.multiply(lift)
-
-        # --- slide in-plane to Offset2D center (global)
-        off = self.offset2D.Shape.copy()
-        off.Placement = self.offset2D.getGlobalPlacement()
-        target_c = off.BoundBox.Center
-
-        curP = self.fusedArrays.Placement
-        hc_c_global = curP.multVec(self.fusedArrays.Shape.BoundBox.Center)
-        d = target_c - hc_c_global
-        d_inplane = d - n.multiply(d.dot(n))
-        self.fusedArrays.Placement.Base = self.fusedArrays.Placement.Base + d_inplane
-
-        doc.recompute()
-        
     def supportShape(self, src_obj, subname):
         """
         Return the exact Face referenced by `subname` from `src_obj.Shape`,
@@ -474,28 +415,27 @@ class Plane():
         extrusion.setExpression('LengthRev', f"max(-{expr_mm}, 0 mm)")
         return extrusion
 
+    def alignFace(self, reference, target):
+        referenceRotation = self.getGlobalRotation(reference)
+        targetRotation = self.getGlobalRotation(target)
+        deltaRotation = self.getDeltaRotation(referenceRotation, targetRotation)
+        target.Placement.Rotation = referenceRotation
+        
 
     @staticmethod
-    def alignShapeFace(obj1, faceIndex1, obj2, faceIndex2):
-        import math
-        face1 = obj1.Shape.Faces[faceIndex1]
-        face2 = obj2.Shape.Faces[faceIndex2]
+    def getGlobalRotation(plane):
+        globalRotation = getattr(plane, "getGlobalPlacement", None)
+        if callable(globalRotation):
+            return globalRotation().Rotation
+        return plane.Placement.Rotation
 
-        normal1 = face1.normalAt(0.5, 0.5)
-        normal2 = face2.normalAt(0.5, 0.5)
-        rotation_axis = normal1.cross(normal2)
-        if rotation_axis.Length == 0:
-            rotation_axis = App.Vector(1, 0, 0)
-        rotation_angle = normal1.getAngle(normal2)
-        rotation = App.Rotation(rotation_axis, math.degrees(rotation_angle))
-        obj1.Placement.Rotation = rotation.multiply(obj1.Placement.Rotation)
-        App.ActiveDocument.recompute()
+    @staticmethod
+    def getDeltaRotation(reference, target):
+        baseRotation = App.Rotation(reference)
+        baseRotation.invert()
+        return baseRotation.multiply(target)
 
-        center1 = face1.CenterOfMass
-        center2 = face2.CenterOfMass
-        translation = center2 - center1
-        obj1.Placement.Base += translation
-        App.ActiveDocument.recompute()
+
 
 def delete_after_delay(objs, delay_ms=10000):
     """Delete the given objects after delay_ms milliseconds."""
@@ -510,17 +450,21 @@ def delete_after_delay(objs, delay_ms=10000):
         doc.recompute()
     QtCore.QTimer.singleShot(delay_ms, _delete)
 
+
 def main():
     # 1) Build user spreadsheet and binder
     sheet = SpreadSheet()
     userSpreadsheet = sheet.userSpreadSheet()
-
     plane = Plane()
     binder = plane.createShapeBinder()
 
     # 2) Offsets and extrusions
     offset2D_a = plane.createOffset2D(binder)
     offset2D_b = plane.createOffset2D(binder)
+    plane.alignFace(binder, offset2D_a)
+    plane.alignFace(binder, offset2D_b)
+
+
     extrusion_a = plane.extrude(offset2D_a, spreadsheet=userSpreadsheet)
     extrusion_b = plane.extrude(offset2D_b, spreadsheet=userSpreadsheet)
 
