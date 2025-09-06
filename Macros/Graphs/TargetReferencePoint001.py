@@ -1,6 +1,6 @@
+from itertools import combinations, product
+
 import matplotlib.pyplot as plt
-from itertools import product, combinations
-from Points import Points
 
 target_bbox = {
     "min": (62.1281, 45.1335, 0),
@@ -32,7 +32,7 @@ ax = figure.add_subplot(111, projection='3d')
 plot_bbox(ax, target_bbox, "r", "Target BBox")
 plot_bbox(ax, reference_bbox, "b", "Reference BBox")
 
-ax.scatter(*third_point, c="g", s=10, marker="o", label="Third Point")
+ax.scatter(*third_point, c="g", s=10, marker="o", label="Third Point")  # type: ignore
     
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
