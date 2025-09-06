@@ -4,7 +4,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from RodriguezTransformation import Points
 
 points = Points()
-R = points.rotation()
+R = points.compute()
 newTarget = points.target @ R.T
 newTargetTranslation = points.point - newTarget.mean(axis=0)
 alignedNewTarget = newTarget + newTargetTranslation

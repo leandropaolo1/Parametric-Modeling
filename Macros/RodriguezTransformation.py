@@ -1,65 +1,60 @@
 import numpy as np
+from typing import Optional
 
 
 class Points:
     """
-    A helper class to manage and align two sets of 3D points:
-    - A reference face (slanted in 3D space)
-    - A target face (flat in XY plane)
+    Manage and align two sets of 3D points:
+    - Reference face (slanted in 3D space)
+    - Target face (flat in XY plane)
     - A clicked reference point
 
-    The class computes:
-    - Normals of reference and target
-    - Rotation axis and angle between them
-    - Rodrigues rotation matrix to align target → reference
-
-    Attributes
-    ----------
-    reference : np.ndarray
-        Array of reference face vertices (Nx3).
-    target : np.ndarray
-        Array of target face vertices (Mx3).
-    point : np.ndarray
-        A specific reference point (clicked by user).
-    reference_norm : np.ndarray
-        Unit normal vector of the reference face.
-    target_norm : np.ndarray
-        Unit normal vector of the target face.
-    axis : np.ndarray
-        Rotation axis (unit vector).
-    angle : float
-        Rotation angle (radians).
-    R : np.ndarray
-        Computed rotation matrix (3x3).
+    Computes normals, axis, angle, and Rodrigues rotation matrix
+    for aligning the target face to the reference face.
     """
 
-    def __init__(self) -> None:
-        self.reference = np.array(
-            [
-                (-113.12865648751726, 4.789457814476987, -270.27419162089467),
+    def __init__(self,
+        reference: Optional[np.ndarray] = None,
+        target: Optional[np.ndarray] = None,
+        point: Optional[np.ndarray] = None):
+        if reference is None or target is None or point is None:
+            # Defaults
+            self.reference: np.ndarray = np.array([
+                (-113.12865648751726,  4.789457814476987, -270.27419162089467),
                 (-115.07642775687538, 38.80953815277934, -240.5570390438199),
-                (-118.04060161192928, 4.789457814476990, -195.33261472983640),
+                (-118.04060161192928,  4.789457814476990, -195.33261472983640),
                 (-118.11044330302204, 20.817561281289972, -194.26704227124210),
-                (-118.50699530542012, 4.255156433468684, -188.21684319920945),
+                (-118.50699530542012,  4.255156433468684, -188.21684319920945),
                 (-118.58629913058888, 20.266577164611410, -187.00690690022168),
-            ]
-        )
+            ])
 
-        self.target = np.array(
-            [
+            self.target: np.ndarray = np.array([
                 (62.1281, 45.1335, 0),
                 (101.813, 45.1335, 0),
                 (101.813, 67.6384, 0),
                 (62.1281, 67.6384, 0),
-            ]
-        )
+            ])
 
-        self.point = np.array([-115.67, 22.3606, -231.499])
+            self.point: np.ndarray = np.array([-115.67, 22.3606, -231.499])
+        else:
+            self.reference: np.ndarray = reference
+            self.target: np.ndarray = target
+            self.point: np.ndarray = point
+
         self._norm("reference")
         self._norm("target")
         self._axis()
         self._angle()
-        self.K = []
+
+        self.K: np.ndarray = np.array([])
+
+    def compute(self):
+        self._norm("reference")
+        self._norm("target")
+        self._axis()
+        self._angle()
+        return self._rotation()
+      
 
     def __str__(self) -> str:
         return f"Points(reference={len(self.reference)} pts, target={len(self.target)} pts, point={self.point})"
@@ -93,7 +88,7 @@ class Points:
             return angle
         return None
 
-    def rotation(self):
+    def _rotation(self):
         ux, uy, uz = getattr(self, "axis")
         angle = getattr(self, "angle")
         K = np.array([[0, -uz, uy], [uz, 0, -ux], [-uy, ux, 0]])
