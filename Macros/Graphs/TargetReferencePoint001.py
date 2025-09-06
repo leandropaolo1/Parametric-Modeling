@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from itertools import product, combinations
+from Points import Points
 
 target_bbox = {
     "min": (62.1281, 45.1335, 0),
