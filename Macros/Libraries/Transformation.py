@@ -1,5 +1,6 @@
-import numpy as np
 from typing import Optional
+
+import numpy as np
 
 
 class Points:
@@ -13,27 +14,33 @@ class Points:
     for aligning the target face to the reference face.
     """
 
-    def __init__(self,
+    def __init__(
+        self,
         reference: Optional[np.ndarray] = None,
         target: Optional[np.ndarray] = None,
-        point: Optional[np.ndarray] = None):
+        point: Optional[np.ndarray] = None,
+    ):
         if reference is None or target is None or point is None:
             # Defaults
-            self.reference: np.ndarray = np.array([
-                (-113.12865648751726,  4.789457814476987, -270.27419162089467),
-                (-115.07642775687538, 38.80953815277934, -240.5570390438199),
-                (-118.04060161192928,  4.789457814476990, -195.33261472983640),
-                (-118.11044330302204, 20.817561281289972, -194.26704227124210),
-                (-118.50699530542012,  4.255156433468684, -188.21684319920945),
-                (-118.58629913058888, 20.266577164611410, -187.00690690022168),
-            ])
+            self.reference: np.ndarray = np.array(
+                [
+                    (-113.12865648751726, 4.789457814476987, -270.27419162089467),
+                    (-115.07642775687538, 38.80953815277934, -240.5570390438199),
+                    (-118.04060161192928, 4.789457814476990, -195.33261472983640),
+                    (-118.11044330302204, 20.817561281289972, -194.26704227124210),
+                    (-118.50699530542012, 4.255156433468684, -188.21684319920945),
+                    (-118.58629913058888, 20.266577164611410, -187.00690690022168),
+                ]
+            )
 
-            self.target: np.ndarray = np.array([
-                (62.1281, 45.1335, 0),
-                (101.813, 45.1335, 0),
-                (101.813, 67.6384, 0),
-                (62.1281, 67.6384, 0),
-            ])
+            self.target: np.ndarray = np.array(
+                [
+                    (62.1281, 45.1335, 0),
+                    (101.813, 45.1335, 0),
+                    (101.813, 67.6384, 0),
+                    (62.1281, 67.6384, 0),
+                ]
+            )
 
             self.point: np.ndarray = np.array([-115.67, 22.3606, -231.499])
         else:
@@ -54,7 +61,6 @@ class Points:
         self._axis()
         self._angle()
         return self._rotation()
-      
 
     def __str__(self) -> str:
         return f"Points(reference={len(self.reference)} pts, target={len(self.target)} pts, point={self.point})"
