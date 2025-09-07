@@ -6,7 +6,7 @@ import FreeCADGui as Gui
 import numpy as np
 from PySide import QtCore
 
-from Libraries.Transformation import Points
+from Libraries001.Transformation import Points
 
 hexSeparation = 0.2
 hexExtrusion = -2
@@ -37,8 +37,10 @@ class ShapePattern:
             hexagon = doc.addObject("Part::RegularPolygon", "HoneycombHexagon")
             hexagon.Polygon = 6
             hexagon.setExpression("Circumradius", f"{userSheetLabel}.radius")
+                    # recompute to make shape usable
+            doc.recompute()
 
-            # 3) Two ortho arrays as *links* (memory-friendly)
+            self.hexagon = np.array([[v.X, v.Y, v.Z] for v in hexagon.Shape.Vertexes])
             row1 = Draft.make_ortho_array(
                 hexagon,
                 v_x=App.Vector(1, 0, 0),
@@ -79,71 +81,44 @@ class ShapePattern:
                 doc.AutoRecompute = had_autorc
             doc.recompute()  # one-shot recompute
 
-        # Store and hand back the single tool we’ll cut with
         self.fusedArrays = compound
         return compound
-
+    
     def align(self, reference, target=None, point=None):
         if target is None and self.fusedArrays is not None:
             target = self.fusedArrays
 
+        # 1. Get the reference face and its properties
         referenceFace = reference.Shape.Faces[0]
         referencePoints = np.array([[v.X, v.Y, v.Z] for v in referenceFace.Vertexes])
-        bb = target.Shape.BoundBox  # type: ignore
-        targetPoints = np.array(
-            [
-                [bb.XMin, bb.YMin, bb.ZMin],
-                [bb.XMin, bb.YMin, bb.ZMax],
-                [bb.XMin, bb.YMax, bb.ZMin],
-                [bb.XMin, bb.YMax, bb.ZMax],
-                [bb.XMax, bb.YMin, bb.ZMin],
-                [bb.XMax, bb.YMin, bb.ZMax],
-                [bb.XMax, bb.YMax, bb.ZMin],
-                [bb.XMax, bb.YMax, bb.ZMax],
-            ]
-        )
+        # The SIMPLE and CORRECT way to get the target position
+        referenceCenter = referenceFace.CenterOfMass
 
-        points = Points(referencePoints, targetPoints, point)
+        # 2. Use your Points class to get the rotation matrix R. This part is perfect.
+        # We pass self.hexagon as the target because it represents the object's original flat state.
+        points = Points(referencePoints, self.hexagon, point)
         R = points.compute()
-        newTarget = points.target @ R.T
 
-        # Rotation from numpy → FreeCAD
+        # 3. Convert the NumPy matrix R into a FreeCAD Rotation object
+        # Your method of creating a Rotation from the matrix columns is correct.
         rotation = App.Rotation(
-            App.Vector(R[0, 0], R[1, 0], R[2, 0]),
-            App.Vector(R[0, 1], R[1, 1], R[2, 1]),
-            App.Vector(R[0, 2], R[1, 2], R[2, 2]),
+            App.Vector(R[0,0], R[1,0], R[2,0]),
+            App.Vector(R[0,1], R[1,1], R[2,1]),
+            App.Vector(R[0,2], R[1,2], R[2,2]),
         )
 
-        # Apply rotation relative to current placement
-        currentPlacement = target.Placement
-        newPlacement = App.Placement(App.Vector(0, 0, 0), rotation)
-        target.Placement = currentPlacement.multiply(newPlacement)
+        # 4. Create the new ABSOLUTE placement
+        # The placement is defined by the target position (referenceCenter) and orientation (rotation).
+        new_absolute_placement = App.Placement(referenceCenter, rotation)
 
-        # --- Now align centers of gravity ---
-        targetCenter = target.Shape.CenterOfGravity
-        referenceCenter = reference.Shape.CenterOfGravity
-        delta = referenceCenter.sub(targetCenter)
-
-        # Shift target so centers match
-        target.Placement.Base += delta
-
-        App.Console.PrintMessage(
-            "[align] Target center before: {}\n".format(targetCenter)
-        )
-        App.Console.PrintMessage(
-            "[align] Reference center: {}\n".format(referenceCenter)
-        )
-        App.Console.PrintMessage("[align] Applied delta: {}\n".format(delta))
-        App.Console.PrintMessage(
-            "[align] New target base: {}\n".format(target.Placement.Base)
-        )
-
-        # Final placement info
-        App.Console.PrintMessage(
-            "[align] Final placement: {}\n".format(target.Placement)
-        )
-
+        # 5. SET the object's placement directly. Do NOT multiply.
+        target.Placement = new_absolute_placement
+        
+        App.ActiveDocument.recompute()
         return target
+
+
+
 
     def extrude(self, length=None):
         extruded = App.ActiveDocument.addObject("Part::Extrusion", "Extruded")

@@ -47,10 +47,10 @@ class Points:
 
         self.target = np.array(
             [
-                (62.1281, 45.1335, 0),
-                (101.813, 45.1335, 0),
-                (101.813, 67.6384, 0),
-                (62.1281, 67.6384, 0),
+                (62.1281, 45.1335, 10),
+                (101.813, 45.1335, 30),
+                (101.813, 67.6384, 20),
+                (62.1281, 67.6384, 10),
             ]
         )
 
@@ -93,7 +93,7 @@ class Points:
             return angle
         return None
 
-    def rotation(self):
+    def compute(self):
         ux, uy, uz = getattr(self, "axis")
         angle = getattr(self, "angle")
         K = np.array([[0, -uz, uy], [uz, 0, -ux], [-uy, ux, 0]])

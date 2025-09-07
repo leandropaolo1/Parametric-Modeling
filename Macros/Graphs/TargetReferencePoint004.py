@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-from Libraries.Transformation import Points
+from RodriguezTransformation import Points
 
 points = Points()
 R = points.compute()
