@@ -48,7 +48,7 @@ class Plane:
         binder.Support = [(src_obj, subname)]
         binder.ViewObject.Visibility = False
 
-        self.doc.recompute()
+
         return binder
 
     def createOffset2D(self, subShapeBinder):

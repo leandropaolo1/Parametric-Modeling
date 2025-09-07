@@ -77,6 +77,7 @@ class ShapePattern:
         finally:
             if hasattr(doc, "AutoRecompute"):
                 doc.AutoRecompute = had_autorc
+            doc.recompute()  # one-shot recompute
 
         # Store and hand back the single tool we’ll cut with
         self.fusedArrays = compound
