@@ -25,38 +25,6 @@ class ShapePattern:
         self.fusedArrays = None
         self.K = []
 
-    def supportShape(self, src_obj, subname):
-        """
-        Return the exact Face referenced by `subname` from `src_obj.Shape`,
-        tolerating odd formats (e.g. ('Face3',), 'Face', etc.).
-        """
-        shp = src_obj.Shape
-
-        # Normalize subname to a simple string like "FaceN"
-        if isinstance(subname, (tuple, list)) and subname:
-            subname = subname[0]
-
-        # 1) Try direct lookup (best case)
-        try:
-            return shp.getElement(subname)
-        except Exception:
-            pass
-
-        # 2) Parse trailing digits and index the Faces list
-        try:
-            import re
-
-            m = re.search(r"(\d+)$", str(subname))
-            if m:
-                i = int(m.group(1)) - 1
-                if 0 <= i < len(shp.Faces):
-                    return shp.Faces[i]
-        except Exception:
-            pass
-
-        # 3) Fallback: first face
-        return shp.Faces[0] if shp.Faces else None
-
     def create(self):
         doc = App.ActiveDocument
 
@@ -109,7 +77,6 @@ class ShapePattern:
         finally:
             if hasattr(doc, "AutoRecompute"):
                 doc.AutoRecompute = had_autorc
-            doc.recompute()  # one-shot recompute
 
         # Store and hand back the single tool we’ll cut with
         self.fusedArrays = compound
