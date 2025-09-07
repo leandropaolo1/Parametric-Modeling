@@ -6,7 +6,7 @@ import FreeCADGui as Gui
 import numpy as np
 from PySide import QtCore
 
-from Libraries.Transformation import Points
+from Libraries002.Transformation import Points
 
 hexSeparation = 0.2
 hexExtrusion = -2

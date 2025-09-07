@@ -1,7 +1,7 @@
-import Libraries001.Folders as Folders
-import Libraries001.Planes as Planes
-import Libraries001.Patterns as Patterns
-import Libraries001.Spreadsheets as SpreadSheet
+import Libraries002.Folders as Folders
+import Libraries002.Planes as Planes
+import Libraries002.Patterns as Patterns
+import Libraries002.Spreadsheets as SpreadSheet
 
 from PySide import QtCore
 import FreeCADGui as Gui
