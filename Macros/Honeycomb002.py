@@ -451,7 +451,7 @@ class Plane:
     def getGlobalRotation(plane):
         globalRotation = getattr(plane, "getGlobalPlacement", None)
         if callable(globalRotation):
-            return globalRotation().Rotation
+            return globalRotation().Rotation # type: ignore
         return plane.Placement.Rotation
 
     @staticmethod
