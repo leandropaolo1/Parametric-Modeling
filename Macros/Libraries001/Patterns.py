@@ -5,7 +5,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import numpy as np
 from PySide import QtCore
-
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from Libraries001.Transformation import Points
 
 hexSeparation = 0.2
@@ -83,41 +84,66 @@ class ShapePattern:
 
         self.fusedArrays = compound
         return compound
-    
-    def align(self, reference, target=None, point=None):
-        if target is None and self.fusedArrays is not None:
-            target = self.fusedArrays
 
-        # 1. Get the reference face and its properties
+    def align(reference, target):
+        referencePlacement = reference.getGlobalPlacement()
+        targetPlacement = target.getGlobalPlacement()
+
+        # --- Reference points (face) ---
         referenceFace = reference.Shape.Faces[0]
-        referencePoints = np.array([[v.X, v.Y, v.Z] for v in referenceFace.Vertexes])
-        # The SIMPLE and CORRECT way to get the target position
-        referenceCenter = referenceFace.CenterOfMass
+        referencePoints = np.array([
+            [referencePlacement.multVec(v.Point).x,
+            referencePlacement.multVec(v.Point).y,
+            referencePlacement.multVec(v.Point).z]
+            for v in referenceFace.Vertexes
+        ])
 
-        # 2. Use your Points class to get the rotation matrix R. This part is perfect.
-        # We pass self.hexagon as the target because it represents the object's original flat state.
-        points = Points(referencePoints, self.hexagon, point)
-        R = points.compute()
+        # --- Target points (wire: take 4 vertices) ---
+        targetPoints = np.array([
+            [targetPlacement.multVec(v.Point).x,
+            targetPlacement.multVec(v.Point).y,
+            targetPlacement.multVec(v.Point).z]
+            for v in list(target.Shape.Vertexes)[:4]
+        ])
 
-        # 3. Convert the NumPy matrix R into a FreeCAD Rotation object
-        # Your method of creating a Rotation from the matrix columns is correct.
-        rotation = App.Rotation(
-            App.Vector(R[0,0], R[1,0], R[2,0]),
-            App.Vector(R[0,1], R[1,1], R[2,1]),
-            App.Vector(R[0,2], R[1,2], R[2,2]),
+        if len(referencePoints) != len(targetPoints):
+            raise RuntimeError(
+                f"Point count mismatch: reference={len(referencePoints)}, target={len(targetPoints)}"
+            )
+
+        # --- Center both sets ---
+        c_ref = referencePoints.mean(axis=0)
+        c_tar = targetPoints.mean(axis=0)
+        P = referencePoints - c_ref
+        Q = targetPoints - c_tar
+
+        # --- Kabsch rotation ---
+        H = Q.T @ P
+        U, S, Vt = np.linalg.svd(H)
+        R = Vt.T @ U.T
+        if np.linalg.det(R) < 0:
+            Vt[-1, :] *= -1
+            R = Vt.T @ U.T
+
+        # --- Convert R (numpy) → FreeCAD Rotation ---
+        m = App.Matrix(
+            R[0,0], R[0,1], R[0,2], 0,
+            R[1,0], R[1,1], R[1,2], 0,
+            R[2,0], R[2,1], R[2,2], 0,
+            0,      0,      0,      1
         )
+        rot = App.Rotation(m)
 
-        # 4. Create the new ABSOLUTE placement
-        # The placement is defined by the target position (referenceCenter) and orientation (rotation).
-        new_absolute_placement = App.Placement(referenceCenter, rotation)
+        # --- Compute translation so centroids match ---
+        c_tar_vec = App.Vector(*c_tar)
+        c_ref_vec = App.Vector(*c_ref)
+        translation = c_ref_vec - rot.multVec(c_tar_vec)
 
-        # 5. SET the object's placement directly. Do NOT multiply.
-        target.Placement = new_absolute_placement
-        
+        # --- Apply Placement ---
+        target.Placement = App.Placement(translation, rot)
         App.ActiveDocument.recompute()
+
         return target
-
-
 
 
     def extrude(self, length=None):

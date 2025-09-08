@@ -33,28 +33,9 @@ class Points:
         Computed rotation matrix (3x3).
     """
 
-    def __init__(self) -> None:
-        self.reference = np.array(
-            [
-                (-113.12865648751726, 4.789457814476987, -270.27419162089467),
-                (-115.07642775687538, 38.80953815277934, -240.5570390438199),
-                (-118.04060161192928, 4.789457814476990, -195.33261472983640),
-                (-118.11044330302204, 20.817561281289972, -194.26704227124210),
-                (-118.50699530542012, 4.255156433468684, -188.21684319920945),
-                (-118.58629913058888, 20.266577164611410, -187.00690690022168),
-            ]
-        )
-
-        self.target = np.array(
-            [
-                (62.1281, 45.1335, 10),
-                (101.813, 45.1335, 30),
-                (101.813, 67.6384, 20),
-                (62.1281, 67.6384, 10),
-            ]
-        )
-
-        self.point = np.array([-115.67, 22.3606, -231.499])
+    def __init__(self, reference, target):
+        self.reference = reference
+        self.target = target
         self._norm("reference")
         self._norm("target")
         self._axis()
@@ -62,7 +43,7 @@ class Points:
         self.K = []
 
     def __str__(self) -> str:
-        return f"Points(reference={len(self.reference)} pts, target={len(self.target)} pts, point={self.point})"
+        return f"Points(reference={len(self.reference)} pts, target={len(self.target)} pts)"
 
     def _norm(self, name):
         att = getattr(self, name)

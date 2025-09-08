@@ -21,7 +21,6 @@ class Points:
         point: Optional[np.ndarray] = None,
     ):
         if reference is None or target is None or point is None:
-            # Defaults
             self.reference: np.ndarray = np.array(
                 [
                     (-113.12865648751726, 4.789457814476987, -270.27419162089467),
@@ -32,7 +31,6 @@ class Points:
                     (-118.58629913058888, 20.266577164611410, -187.00690690022168),
                 ]
             )
-
             self.target: np.ndarray = np.array(
                 [
                     (62.1281, 45.1335, 0),
@@ -41,19 +39,18 @@ class Points:
                     (62.1281, 67.6384, 0),
                 ]
             )
-
             self.point: np.ndarray = np.array([-115.67, 22.3606, -231.499])
         else:
             self.reference: np.ndarray = reference
             self.target: np.ndarray = target
             self.point: np.ndarray = point
-
+            
         self._norm("reference")
         self._norm("target")
         self._axis()
         self._angle()
-
         self.K: np.ndarray = np.array([])
+
 
     def compute(self):
         self._norm("reference")
@@ -62,8 +59,10 @@ class Points:
         self._angle()
         return self._rotation()
 
+
     def __str__(self) -> str:
         return f"Points(reference={len(self.reference)} pts, target={len(self.target)} pts, point={self.point})"
+
 
     def _norm(self, name):
         att = getattr(self, name)
@@ -71,6 +70,7 @@ class Points:
         normal = np.cross(v2 - v1, v3 - v1)
         normal /= np.linalg.norm(normal)
         setattr(self, f"{name}_norm", normal)
+
 
     def _axis(self):
         target_norm = getattr(self, "target_norm")
@@ -84,6 +84,7 @@ class Points:
             return axis
         return None
 
+
     def _angle(self):
         target_norm = getattr(self, "target_norm")
         reference_norm = getattr(self, "reference_norm")
@@ -94,6 +95,7 @@ class Points:
             return angle
         return None
 
+
     def _rotation(self):
         ux, uy, uz = getattr(self, "axis")
         angle = getattr(self, "angle")
@@ -103,5 +105,4 @@ class Points:
         setattr(self, "K", K)
         setattr(self, "I", I)
         setattr(self, "R", R)
-
         return R

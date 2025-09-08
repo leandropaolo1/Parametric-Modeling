@@ -65,7 +65,7 @@ def main():
     )
 
     hexagons.create()
-    hexagons.align(binder)
+    #hexagons.align(binder)
     """
     fused = hexagons.extrude()
 
