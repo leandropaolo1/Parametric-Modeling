@@ -100,13 +100,17 @@ class HexagonalPattern:
             for v in referenceWire.Vertexes
         ])
 
-        referencePoints = referencePoints[::2]
+
         targetPoints = np.array([
             [targetPlacement.multVec(v.Point).x,
             targetPlacement.multVec(v.Point).y,
             targetPlacement.multVec(v.Point).z]
             for v in list(target.Shape.Vertexes)[:4]
         ])
+        
+        N = min(len(referencePoints), len(targetPoints))
+        referencePoints = referencePoints[:N]
+        targetPoints = targetPoints[:N]
 
         if len(referencePoints) != len(targetPoints):
             raise RuntimeError(
