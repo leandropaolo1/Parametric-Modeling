@@ -1,0 +1,208 @@
+\documentclass[4pt]{extarticle}
+\usepackage[margin=0.05in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{multicol}
+
+% Extremely tight formatting for maximum text density
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{10pt}
+
+\begin{document}
+\fontsize{4}{5}\selectfont
+
+\begin{multicols}{2}
+
+\textbf{1. True or False. The Exact method can be used to solve $y' + 1/(2ty) = 0$.} \\
+\textbf{Answer:} True. \\
+\textbf{Explanation:} Rewriting as $2ty \, dy + 1 \, dt = 0$, $M = 1, N = 2ty$. $\frac{\partial M}{\partial y} = 0, \frac{\partial N}{\partial t} = 2y$. While not "immediately" exact, an integrating factor $\mu(t,y)$ can typically be found to make such first-order equations exact.
+
+\textbf{2. True or False. The Separable method can be used to solve $y' + 1/(2ty) = 0$.} \\
+\textbf{Answer:} True. \\
+\textbf{Explanation:} The equation can be rearranged to $\frac{dy}{dt} = -1/(2ty)$. Multiplying gives $y \, dy = -1/(2t) \, dt$. Since $y$ and $t$ are isolated on opposite sides, it is directly separable.
+
+\textbf{3. True or False. The Laplace method can be used to solve $y' + 1/(2ty) = 0$.} \\
+\textbf{Answer:} False. \\
+\textbf{Explanation:} Laplace transforms are designed for linear differential equations. This equation is non-linear because the dependent variable $y$ is in the denominator ($y^{-1}$), preventing standard transform application.
+
+\textbf{4. Solve $y' - 2ty = 0, y(0)=3$.} \\
+\textbf{Answer:} $y = 3e^{t^2}$. \\
+\textbf{Explanation:} $\frac{dy}{dt} = 2ty \rightarrow \int \frac{1}{y} dy = \int 2t dt \rightarrow \ln|y| = t^2 + C \rightarrow y = Ce^{t^2}$. Using $y(0)=3$, $3 = Ce^0 \rightarrow C=3$.
+
+\textbf{5. Solve $y' + (1/t)y = t^3$.} \\
+\textbf{Answer:} $y = (t^4)/5 + C/t$. \\
+\textbf{Explanation:} Linear 1st-order. $\mu = e^{\int (1/t)dt} = t$. Multiply by $t$: $t y' + y = t^4 \rightarrow \frac{d}{dt}(ty) = t^4$. Integrate: $ty = \frac{t^5}{5} + C$. Divide by $t$: $y = \frac{t^4}{5} + \frac{C}{t}$.
+
+\textbf{6. True or False. The Integrating Factor method can be used to solve $y' + 1/(2ty) = 0$.} \\
+\textbf{Answer:} False. \\
+\textbf{Explanation:} Standard Integrating Factor methods ($\mu = e^{\int P(t)dt}$) apply only to linear equations. This equation is non-linear due to the $1/y$ term.
+
+\textbf{7. Find the general solution to $y'' - 8y' + 16y = 0$.} \\
+\textbf{Answer:} $y = C_1e^{4t} + C_2t e^{4t}$. \\
+\textbf{Explanation:} Characteristic eq: $r^2 - 8r + 16 = 0 \rightarrow (r-4)^2 = 0$. Repeated root $r=4$ requires multiplying the second independent solution by $t$.
+
+\textbf{8. Solve $y'' - y = t, y(0)=0, y'(0)=0$.} \\
+\textbf{Answer:} $y = \frac{1}{2}e^t - \frac{1}{2}e^{-t} - t$. \\
+\textbf{Explanation:} $y_h = C_1e^t + C_2e^{-t}$. Guess $y_p = At+B \rightarrow -At-B=t \rightarrow y_p = -t$. Gen: $y = C_1e^t + C_2e^{-t} - t$. $y(0)=C_1+C_2=0$, $y'(0)=C_1-C_2-1=0 \rightarrow C_1=1/2, C_2=-1/2$.
+
+\textbf{9. Find form for particular solution of $ay'' + by' + cy = 3t^3 - 9 \sin(5t)$.} \\
+\textbf{Answer:} $y_p = (At^3 + Bt^2 + Ct + D) + (E \cos(5t) + F \sin(5t))$. \\
+\textbf{Explanation:} Polynomial $t^3$ requires a full 3rd-degree polynomial. Sinusoid $\sin(5t)$ requires both $\sin$ and $\cos$ terms of the same frequency.
+
+\textbf{10. Find Laplace transform of $f(t)=u(t-3)t^2$.} \\
+\textbf{Answer:} $e^{-3s} (\frac{2}{s^3} + \frac{6}{s^2} + \frac{9}{s})$. \\
+\textbf{Explanation:} $\mathcal{L}\{u(t-a)g(t)\} = e^{-as}\mathcal{L}\{g(t+a)\}$. Here $g(t+3) = (t+3)^2 = t^2 + 6t + 9$. Transform: $\frac{2}{s^3} + \frac{6}{s^2} + \frac{9}{s}$.
+
+\textbf{11. Find $Y(s)$ for $y' + 3y = \sin(t), y(0)=1$.} \\
+\textbf{Answer:} $Y(s) = \frac{1}{(s+3)(s^2+1)} + \frac{1}{s+3}$. \\
+\textbf{Explanation:} $sY(s) - 1 + 3Y(s) = \frac{1}{s^2+1} \rightarrow (s+3)Y(s) = \frac{1}{s^2+1} + 1$.
+
+\textbf{12. Compute determinant of $\begin{bmatrix} 2 & 3 \\ 1 & 1 \end{bmatrix}$.} \\
+\textbf{Answer:} $-1$. \textbf{Explanation:} $(2)(1) - (3)(1) = -1$.
+
+\textbf{13. Compute determinant of $\begin{bmatrix} 1 & 2 & 4 \\ 0 & 2 & 6 \\ 0 & 2 & 6 \end{bmatrix}$.} \\
+\textbf{Answer:} $0$. \\
+\textbf{Explanation:} Rows 2 and 3 are identical, making them linearly dependent.
+
+\textbf{14. Find inverse of $\begin{bmatrix} 2 & 3 \\ 1 & 1 \end{bmatrix}$.} \\
+\textbf{Answer:} $\begin{bmatrix} -1 & 3 \\ 1 & -2 \end{bmatrix}$. \\
+\textbf{Explanation:} $\frac{1}{det} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix} = \frac{1}{-1} \begin{bmatrix} 1 & -3 \\ -1 & 2 \end{bmatrix}$.
+
+\textbf{15. Which equilibrium types for $x'=Ax$ are stable?} \\
+\textbf{Answer:} Sinks, Stable Nodes, Stable Spirals ($Re(\lambda) < 0$); Centers are neutrally stable.
+
+\textbf{16. Find eigenvalues/vectors of $\begin{bmatrix} 7 & 3 \\ 8 & 2 \end{bmatrix}$.} \\
+\textbf{Answer:} $\lambda=10, v=\begin{bmatrix} 1 \\ 1 \end{bmatrix}$; $\lambda=-1, v=\begin{bmatrix} 3 \\ -8 \end{bmatrix}$. \\
+\textbf{Explanation:} det$(A-\lambda I) = \lambda^2 - 9\lambda - 10 = 0 \rightarrow (10, -1)$. Solve $(A-\lambda I)v=0$ for each.
+
+\textbf{17. Identify equilibrium type for given eigenvalues/vectors (from \#16).} \\
+\textbf{Answer:} Saddle Point. \\
+\textbf{Explanation:} One positive eigenvalue ($\lambda=10$) and one negative ($\lambda=-1$) create a saddle.
+
+\textbf{18. Select general solution of system in \#16.} \\
+\textbf{Answer:} $x(t) = C_1e^{10t}\begin{bmatrix} 1 \\ 1 \end{bmatrix} + C_2e^{-t}\begin{bmatrix} 3 \\ -8 \end{bmatrix}$.
+
+\textbf{19. Find general solution of system $x' = \begin{bmatrix} 3 & -1 \\ 1 & 1 \end{bmatrix}x$.} \\
+\textbf{Answer:} $x(t) = C_1e^{2t}\begin{bmatrix} 1 \\ 1 \end{bmatrix} + C_2e^{2t}(t\begin{bmatrix} 1 \\ 1 \end{bmatrix} + \begin{bmatrix} 1 \\ 0 \end{bmatrix})$. \\
+\textbf{Explanation:} Repeated root $\lambda=2$. Requires generalized eigenvector $(A-2I)w=v$.
+
+\textbf{20. Find general solution for eigenvalues $1 \pm 3i$.} \\
+\textbf{Answer:} $x(t) = e^{t}(C_1 \cos(3t) + C_2 \sin(3t))$.
+
+\textbf{21. Identify equilibrium type for \#20.} \\
+\textbf{Answer:} Unstable Spiral. \\
+\textbf{Explanation:} Real part $\alpha=1 > 0$ causes expansion (unstable); Imaginary $\beta=3 \neq 0$ causes rotation.
+
+\textbf{22. Form of particular solution for $x'=Ax + [e^{-2t}, t]^T$.} \\
+\textbf{Answer:} $x_p = \vec{a}e^{-2t} + \vec{b}t + \vec{c}$. \\
+\textbf{Explanation:} Undetermined coefficients requires vector forms of forcing functions. $e^{-2t}$ needs $\vec{a}e^{-2t}$; polynomial $t$ needs full degree $\vec{b}t + \vec{c}$.
+
+\textbf{23. Form of particular solution for $x'=Ax + [7 \cos(4t), 0]^T$.} \\
+\textbf{Answer:} $x_p = \vec{a} \cos(4t) + \vec{b} \sin(4t)$. \\
+\textbf{Explanation:} Trig forcing requires both sine and cosine vector terms to account for derivatives.
+
+\textbf{24. Methods Summary:} \\
+\textbf{Distinct Real:} $y = C_1e^{r_1t} + C_2e^{r_2t}$. \\
+\textbf{Repeated Real:} $y = C_1e^{rt} + C_2te^{rt}$. \\
+\textbf{Complex Roots:} $y = e^{at}(C_1 \cos(bt) + C_2 \sin(bt))$. \\
+\textbf{1st-Order Linear:} $y = \frac{1}{\mu} [\int (\mu Q) dt + C], \mu = e^{\int P dt}$. \\
+\textbf{Separable:} $\int \frac{1}{h(y)} dy = \int g(t) dt + C$.
+
+\textbf{26. Find the general solution to the system $x' = \begin{bmatrix} 4 & 1 \\ -1 & 2 \end{bmatrix}x$.} \\
+\textbf{Answer:} $x(t) = C_1 e^{3t} \begin{bmatrix} -1 \\ 1 \end{bmatrix} + C_2 e^{3t} \left( t \begin{bmatrix} -1 \\ 1 \end{bmatrix} + \begin{bmatrix} -1 \\ 0 \end{bmatrix} \right)$. \\
+\textbf{Detailed Step-by-Step Explanation:} \\
+1. \textbf{Find Eigenvalues ($\lambda$):} Solve the characteristic equation $\det(A - \lambda I) = 0$. \\
+$\begin{vmatrix} 4-\lambda & 1 \\ -1 & 2-\lambda \end{vmatrix} = (4-\lambda)(2-\lambda) - (1)(-1) = \lambda^2 - 6\lambda + 8 + 1 = \lambda^2 - 6\lambda + 9 = 0$. \\
+Factoring gives $(\lambda-3)^2 = 0$, so we have a repeated eigenvalue $\mathbf{\lambda = 3}$ with algebraic multiplicity 2. \\
+2. \textbf{Find the first Eigenvector ($\vec{v}$):} Solve $(A - 3I)\vec{v} = \vec{0}$. \\
+$\begin{bmatrix} 4-3 & 1 \\ -1 & 2-3 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 1 & 1 \\ -1 & -1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$. \\
+This yields the equation $v_1 + v_2 = 0 \rightarrow v_1 = -v_2$. Choosing $v_2 = 1$, we get $\mathbf{\vec{v} = \begin{bmatrix} -1 \\ 1 \end{bmatrix}}$. \\
+3. \textbf{Find the Generalized Eigenvector ($\vec{u}$):} Since we only found one eigenvector for a $2 \times 2$ matrix, the matrix is "defective." We must solve $(A - 3I)\vec{u} = \vec{v}$. \\
+$\begin{bmatrix} 1 & 1 \\ -1 & -1 \end{bmatrix} \begin{bmatrix} u_1 \\ u_2 \end{bmatrix} = \begin{bmatrix} -1 \\ 1 \end{bmatrix}$. \\
+Writing the augmented matrix: $\left[ \begin{array}{cc|c} 1 & 1 & -1 \\ -1 & -1 & 1 \end{array} \right] \xrightarrow{R_1+R_2 \to R_2} \left[ \begin{array}{cc|c} 1 & 1 & -1 \\ 0 & 0 & 0 \end{array} \right]$. \\
+This gives $u_1 + u_2 = -1$. Let $u_2 = s$ (free variable). Then $u_1 = -1 - s$. \\
+The vector $\vec{u} = \begin{bmatrix} -1-s \\ s \end{bmatrix} = \begin{bmatrix} -1 \\ 0 \end{bmatrix} + s \begin{bmatrix} -1 \\ 1 \end{bmatrix}$. Since the second part is just a multiple of $\vec{v}$, we discard it and use $\mathbf{\vec{u} = \begin{bmatrix} -1 \\ 0 \end{bmatrix}}$. \\
+4. \textbf{Construct General Solution:} Use the formula for defective systems: \\
+$x(t) = C_1 e^{\lambda t}\vec{v} + C_2 e^{\lambda t}(t\vec{v} + \vec{u})$. \\
+Substituting our values: $x(t) = C_1 e^{3t} \begin{bmatrix} -1 \\ 1 \end{bmatrix} + C_2 e^{3t} \left( t \begin{bmatrix} -1 \\ 1 \end{bmatrix} + \begin{bmatrix} -1 \\ 0 \end{bmatrix} \right)$.
+
+\textbf{27. Solve the IVP system: $x' = \begin{bmatrix} -4 & 5 \\ 5 & -4 \end{bmatrix}x + \begin{bmatrix} 3 \\ -1 \end{bmatrix}e^{-2t}, x(0) = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$.} \\
+\textbf{Answer:} $x(t) = \frac{2}{7}e^{-9t}\begin{bmatrix} -1 \\ 1 \end{bmatrix} + \frac{4}{3}e^t\begin{bmatrix} 1 \\ 1 \end{bmatrix} + \frac{1}{21}e^{-2t}\begin{bmatrix} -1 \\ -13 \end{bmatrix}$. \\
+\textbf{Detailed Step-by-Step Explanation:} \\
+1. \textbf{Homogeneous Solution ($x_h$):} Solve $\det(A-\lambda I) = 0 \rightarrow (-4-\lambda)^2 - 25 = \lambda^2+8\lambda-9=0$. \\
+Eigenvalues: $\lambda_1 = -9, \lambda_2 = 1$. \\
+For $\lambda = -9$: $\begin{bmatrix} 5 & 5 \\ 5 & 5 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = 0 \rightarrow v_1 = -v_2 \rightarrow \vec{v}_1 = \begin{bmatrix} -1 \\ 1 \end{bmatrix}$. \\
+For $\lambda = 1$: $\begin{bmatrix} -5 & 5 \\ 5 & -5 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = 0 \rightarrow v_1 = v_2 \rightarrow \vec{v}_2 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$. \\
+$x_h(t) = c_1e^{-9t}\begin{bmatrix} -1 \\ 1 \end{bmatrix} + c_2e^t\begin{bmatrix} 1 \\ 1 \end{bmatrix}$. \\
+2. \textbf{Particular Solution ($x_p$):} Guess $x_p = \vec{a}e^{-2t}$ where $\vec{a} = \begin{bmatrix} A \\ B \end{bmatrix}$. \\
+Substitute into the system: $-2\vec{a}e^{-2t} = A\vec{a}e^{-2t} + \vec{f}e^{-2t} \rightarrow (-2I - A)\vec{a} = \begin{bmatrix} 3 \\ -1 \end{bmatrix}$. \\
+$\begin{bmatrix} 2 & -5 \\ -5 & 2 \end{bmatrix} \begin{bmatrix} A \\ B \end{bmatrix} = \begin{bmatrix} 3 \\ -1 \end{bmatrix} \rightarrow \text{Eqs: } 2A-5B=3; -5A+2B=-1$. \\
+Solving the system: Multiply Eq 1 by 5 and Eq 2 by 2: $10A-25B=15$ and $-10A+4B=-2$. \\
+Adding gives $-21B = 13 \rightarrow B = -13/21$. Substituting back gives $A = -1/21$. \\
+$x_p(t) = \frac{1}{21}e^{-2t}\begin{bmatrix} -1 \\ -13 \end{bmatrix}$. \\
+3. \textbf{Apply Initial Conditions:} $x(0) = x_h(0) + x_p(0) = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$. \\
+$c_1\begin{bmatrix} -1 \\ 1 \end{bmatrix} + c_2\begin{bmatrix} 1 \\ 1 \end{bmatrix} + \begin{bmatrix} -1/21 \\ -13/21 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$. \\
+Rearrange: $-c_1 + c_2 = 22/21$ and $c_1 + c_2 = 34/21$. \\
+Adding: $2c_2 = 56/21 = 8/3 \rightarrow c_2 = 4/3$. \\
+Subtracting: $2c_1 = 12/21 = 4/7 \rightarrow c_1 = 2/7$. \\
+Final Solution: $x(t) = \frac{2}{7}e^{-9t}\begin{bmatrix} -1 \\ 1 \end{bmatrix} + \frac{4}{3}e^t\begin{bmatrix} 1 \\ 1 \end{bmatrix} + \frac{1}{21}e^{-2t}\begin{bmatrix} -1 \\ -13 \end{bmatrix}$.
+\textbf{28. Solve the Exact method for $2ty^2 + 4 = 2(3 - t^2 y) y'$.} \\
+\textbf{Answer:} $t^2 y^2 + 4t - 6y = C$. \\
+\textbf{Explanation (Step-by-Step):} \\
+1. \textbf{Standard Form:} Rearrange to $M dt + N dy = 0$. $2ty^2 + 4 = 2(3 - t^2 y) \frac{dy}{dt} \rightarrow (2ty^2 + 4) dt - 2(3 - t^2 y) dy = 0$. Distribute: $(2ty^2 + 4) dt + (2t^2 y - 6) dy = 0$. \\
+2. \textbf{Test Exactness:} $M = 2ty^2 + 4, N = 2t^2 y - 6$. $\frac{\partial M}{\partial y} = 4ty$. $\frac{\partial N}{\partial t} = 4ty$. Matches $\rightarrow$ Exact. \\
+3. \textbf{Potential Function:} $\Psi = \int M dt = \int (2ty^2 + 4) dt = t^2 y^2 + 4t + h(y)$. \\
+4. \textbf{Solve for $h(y)$:} $\frac{\partial \Psi}{\partial y} = 2t^2 y + h'(y)$. Set $\frac{\partial \Psi}{\partial y} = N \rightarrow 2t^2 y + h'(y) = 2t^2 y - 6$. Thus, $h'(y) = -6$. \\
+5. \textbf{Final Result:} $h(y) = \int -6 dy = -6y$. General solution is $\Psi = C \rightarrow t^2 y^2 + 4t - 6y = C$.
+
+\textbf{Roots Summary:} Distinct: $y = C_1e^{r_1t} + C_2e^{r_2t}$. Repeated: $y = C_1e^{rt} + C_2te^{rt}$. Complex: $y = e^{at}(C_1 \cos(bt) + C_2 \sin(bt))$. 1st-Order Linear: $y = \frac{1}{\mu} [\int (\mu Q) dt + C]$. Separable: $\int \frac{1}{h(y)} dy = \int g(t) dt + C$.
+
+\textbf{29. Solve $y' + 4y = \delta(t-3), y(0)=0$ using Laplace Transforms.} \\
+\textbf{Answer:} $y(t) = u(t-3)e^{-4(t-3)}$. \\
+\textbf{Explanation (Step-by-Step):} \\
+1. \textbf{Apply Laplace Transform:} $\mathcal{L}\{y'\} + 4\mathcal{L}\{y\} = \mathcal{L}\{\delta(t-3)\}$. \\
+Using the property $\mathcal{L}\{y'\} = sY(s) - y(0)$ and $\mathcal{L}\{\delta(t-a)\} = e^{-as}$: \\
+$(sY(s) - 0) + 4Y(s) = e^{-3s}$. \\
+2. \textbf{Solve for $Y(s)$:} Factor out $Y(s)$: $(s+4)Y(s) = e^{-3s} \rightarrow Y(s) = \frac{e^{-3s}}{s+4}$. \\
+3. \textbf{Inverse Laplace Transform:} Use the shifting property $\mathcal{L}^{-1}\{e^{-as}F(s)\} = u(t-a)f(t-a)$. \\
+Here, $F(s) = \frac{1}{s+4}$, so $f(t) = e^{-4t}$. \\
+Applying the shift $a=3$: $y(t) = u(t-3)e^{-4(t-3)}$. This represents a system that is at rest until $t=3$, at which point it receives an impulse and begins to decay exponentially.
+
+\textbf{Methods recap:} Distinct: $y = C_1e^{r_1t} + C_2e^{r_2t}$. Repeated: $y = C_1e^{rt} + C_2te^{rt}$. Complex: $y = e^{at}(C_1 \cos(bt) + C_2 \sin(bt))$. 1st-Order Linear: $y = \frac{1}{\mu} [\int (\mu Q) dt + C]$. Separable: $\int \frac{1}{h(y)} dy = \int g(t) dt + C$.
+
+\textbf{30. Find the Laplace transform of $f(t) = 4(t-3)u(t-3)$.} \\
+\textbf{Answer:} $\frac{4e^{-3s}}{s^2}$. \\
+\textbf{Explanation:} Use the property $\mathcal{L}\{g(t-a)u(t-a)\} = e^{-as}G(s)$. Here $a=3$ and $g(t) = 4t$. Since $\mathcal{L}\{4t\} = \frac{4}{s^2}$, the shift results in $e^{-3s} \cdot \frac{4}{s^2}$. This represents a ramp function that stays at 0 until $t=3$.
+
+\textbf{31. Model: A 3 kg mass on a spring ($k=12$) with no damping. Initial displacement 2m, released from rest. At $t=1$, an impulse force is applied.} \\
+\textbf{Answer:} $3y'' + 12y = \delta(t-1), y(0)=2, y'(0)=0$. \\
+\textbf{Explanation (Step-by-Step):} \\
+1. \textbf{Standard Form:} The general second-order equation is $my'' + cy' + ky = F(t)$. \\
+2. \textbf{Identify Constants:} Given mass $m=3$, spring constant $k=12$, and "no dampening" means $c=0$. \\
+3. \textbf{Forcing Function:} An "impulse force" at $t=1$ is represented by the Dirac delta function $\delta(t-1)$. \\
+4. \textbf{Initial Conditions:} "Displacement is 2m" gives $y(0)=2$. "Released from rest" implies initial velocity $y'(0)=0$. Combining these gives the differential model: $3y'' + 12y = \delta(t-1)$.
+
+\textbf{Methods Summary:} Distinct: $y = C_1e^{r_1t} + C_2e^{r_2t}$. Repeated: $y = C_1e^{rt} + C_2te^{rt}$. Complex: $y = e^{at}(C_1 \cos(bt) + C_2 \sin(bt))$. 1st-Order Linear: $y = \frac{1}{\mu} [\int (\mu Q) dt + C]$. Separable: $\int \frac{1}{h(y)} dy = \int g(t) dt + C$.
+
+\textbf{32. Solve $y' + 7y = 4, y(0)=2$.} \\
+\textbf{Answer:} $y(t) = \frac{4}{7} + \frac{10}{7}e^{-7t}$. \\
+\textbf{Explanation (Step-by-Step):} \\
+1. \textbf{Integrating Factor:} $\mu(t) = e^{\int 7 dt} = e^{7t}$. \\
+2. \textbf{Multiply Eq:} $e^{7t}y' + 7e^{7t}y = 4e^{7t} \rightarrow \frac{d}{dt}(e^{7t}y) = 4e^{7t}$. \\
+3. \textbf{Integrate:} $e^{7t}y = \int 4e^{7t} dt = \frac{4}{7}e^{7t} + C \rightarrow y(t) = \frac{4}{7} + Ce^{-7t}$. \\
+4. \textbf{Initial Condition:} $y(0) = \frac{4}{7} + C = 2 \rightarrow C = 2 - \frac{4}{7} = \frac{10}{7}$.
+
+\textbf{33. Find the Laplace transform of $f(t) = 5te^{2t}$.} \\
+\textbf{Answer:} $\frac{5}{(s-2)^2}$. \\
+\textbf{Explanation:} Use the frequency shifting property $\mathcal{L}\{e^{at}t^n\} = \frac{n!}{(s-a)^{n+1}}$. Here $a=2, n=1$, and there is a constant multiplier of 5. So, $\mathcal{L}\{5te^{2t}\} = 5 \cdot \frac{1!}{(s-2)^{1+1}} = \frac{5}{(s-2)^2}$.
+
+\textbf{34. Find the inverse Laplace transform of $F(s) = \frac{3}{s+2} + \frac{e^{-4s}}{s^2+16}$.} \\
+\textbf{Answer:} $y(t) = 3e^{-2t} + \frac{1}{4}u(t-4)\sin(4(t-4))$. \\
+\textbf{Explanation (Step-by-Step):} \\
+1. \textbf{First Term:} $\mathcal{L}^{-1}\{\frac{3}{s+2}\} = 3e^{-2t}$. \\
+2. \textbf{Second Term:} Let $G(s) = \frac{1}{s^2+16}$. Since $\mathcal{L}\{\sin(kt)\} = \frac{k}{s^2+k^2}$, we need a 4 in the numerator. $\frac{1}{s^2+16} = \frac{1}{4} \cdot \frac{4}{s^2+4^2}$, so $g(t) = \frac{1}{4}\sin(4t)$. \\
+3. \textbf{Shift Property:} Use $\mathcal{L}^{-1}\{e^{-as}G(s)\} = u(t-a)g(t-a)$. With $a=4$: $u(t-4) \cdot \frac{1}{4}\sin(4(t-4))$.
+
+\end{multicols}
+\end{document}

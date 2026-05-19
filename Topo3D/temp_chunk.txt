@@ -1,0 +1,37 @@
+extarticle
+geometry
+inputenc
+amsmath
+amssymb
+multicol
+
+% Extremely tight formatting for maximum text density
+0pt
+10pt
+
+document
+5selectfont
+
+2
+
+1. True or False. The Exact method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: True. 
+partial t = 2y$. While not "immediately" exact, an integrating factor $mu(t,y)$ can typically be found to make such first-order equations exact.
+
+2. True or False. The Separable method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: True. 
+dt = -1/(2ty)$. Multiplying gives $y , dy = -1/(2t) , dt$. Since $y$ and $t$ are isolated on opposite sides, it is directly separable.
+
+3. True or False. The Laplace method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: False. 
+-1$), preventing standard transform application.
+
+4. Solve $y' - 2ty = 0, y(0)=3$. 
+t^2$. 
+t^2$. Using $y(0)=3$, $3 = Ce^0 rightarrow C=3$.
+
+5. Solve $y' + (1/t)y = t^3$. 
+Answer: $y = (t^4)/5 + C/t$. 
+t$.
+
+6. True or False. The Integrating Factor method can be used to solve $y' + 1/(2ty) =

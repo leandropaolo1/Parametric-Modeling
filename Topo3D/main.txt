@@ -1,0 +1,208 @@
+extarticle
+geometry
+inputenc
+amsmath
+amssymb
+multicol
+
+% Extremely tight formatting for maximum text density
+0pt
+10pt
+
+document
+5selectfont
+
+2
+
+1. True or False. The Exact method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: True. 
+partial t = 2y$. While not "immediately" exact, an integrating factor $mu(t,y)$ can typically be found to make such first-order equations exact.
+
+2. True or False. The Separable method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: True. 
+dt = -1/(2ty)$. Multiplying gives $y , dy = -1/(2t) , dt$. Since $y$ and $t$ are isolated on opposite sides, it is directly separable.
+
+3. True or False. The Laplace method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: False. 
+-1$), preventing standard transform application.
+
+4. Solve $y' - 2ty = 0, y(0)=3$. 
+t^2$. 
+t^2$. Using $y(0)=3$, $3 = Ce^0 rightarrow C=3$.
+
+5. Solve $y' + (1/t)y = t^3$. 
+Answer: $y = (t^4)/5 + C/t$. 
+t$.
+
+6. True or False. The Integrating Factor method can be used to solve $y' + 1/(2ty) = 0$. 
+Answer: False. 
+int P(t)dt$) apply only to linear equations. This equation is non-linear due to the $1/y$ term.
+
+7. Find the general solution to $y'' - 8y' + 16y = 0$. 
+4t$. 
+Explanation: Characteristic eq: $r^2 - 8r + 16 = 0 rightarrow (r-4)^2 = 0$. Repeated root $r=4$ requires multiplying the second independent solution by $t$.
+
+8. Solve $y'' - y = t, y(0)=0, y'(0)=0$. 
+-t - t$. 
+-t - t$. $y(0)=C_1+C_2=0$, $y'(0)=C_1-C_2-1=0 rightarrow C_1=1/2, C_2=-1/2$.
+
+9. Find form for particular solution of $ay'' + by' + cy = 3t^3 - 9 sin(5t)$. 
+Answer: $y_p = (At^3 + Bt^2 + Ct + D) + (E cos(5t) + F sin(5t))$. 
+Explanation: Polynomial $t^3$ requires a full 3rd-degree polynomial. Sinusoid $sin(5t)$ requires both $sin$ and $cos$ terms of the same frequency.
+
+10. Find Laplace transform of $f(t)=u(t-3)t^2$. 
+s)$. 
+s$.
+
+11. Find $Y(s)$ for $y' + 3y = sin(t), y(0)=1$. 
+s+3$. 
+s^2+1 + 1$.
+
+bmatrix$. 
+Explanation: $(2)(1) - (3)(1) = -1$.
+
+bmatrix$. 
+Answer: $0$. 
+Explanation: Rows 2 and 3 are identical, making them linearly dependent.
+
+bmatrix$. 
+bmatrix$. 
+bmatrix$.
+
+15. Which equilibrium types for $x'=Ax$ are stable? 
+Answer: Sinks, Stable Nodes, Stable Spirals ($Re(lambda) < 0$); Centers are neutrally stable.
+
+bmatrix$. 
+bmatrix$. 
+Explanation: det$(A-lambda I) = lambda^2 - 9lambda - 10 = 0 rightarrow (10, -1)$. Solve $(A-lambda I)v=0$ for each.
+
+17. Identify equilibrium type for given eigenvalues/vectors (from #16). 
+Answer: Saddle Point. 
+Explanation: One positive eigenvalue ($lambda=10$) and one negative ($lambda=-1$) create a saddle.
+
+18. Select general solution of system in #16. 
+bmatrix$.
+
+bmatrixx$. 
+bmatrix)$. 
+Explanation: Repeated root $lambda=2$. Requires generalized eigenvector $(A-2I)w=v$.
+
+20. Find general solution for eigenvalues $1 pm 3i$. 
+t(C_1 cos(3t) + C_2 sin(3t))$.
+
+21. Identify equilibrium type for #20. 
+Answer: Unstable Spiral. 
+Explanation: Real part $alpha=1 > 0$ causes expansion (unstable); Imaginary $beta=3 neq 0$ causes rotation.
+
+-2t, t]^T$. 
+c$. 
+c$.
+
+23. Form of particular solution for $x'=Ax + [7 cos(4t), 0]^T$. 
+b sin(4t)$. 
+Explanation: Trig forcing requires both sine and cosine vector terms to account for derivatives.
+
+24. Methods Summary: 
+r_2t$. 
+rt$. 
+at(C_1 cos(bt) + C_2 sin(bt))$. 
+int P dt$. 
+h(y) dy = int g(t) dt + C$.
+
+bmatrixx$. 
+bmatrix right)$. 
+Detailed Step-by-Step Explanation: 
+1. Find Eigenvalues ($lambda$): Solve the characteristic equation $det(A - lambda I) = 0$. 
+$vmatrix = (4-lambda)(2-lambda) - (1)(-1) = lambda^2 - 6lambda + 8 + 1 = lambda^2 - 6lambda + 9 = 0$. 
+Factoring gives $(lambda = 3$ with algebraic multiplicity 2. 
+2. 0$. 
+$bmatrix$. 
+This yields the equation $v_1 + v_2 = 0 bmatrix$. 
+3. v$. 
+$bmatrix$. 
+Writing the augmented matrix: $array right]$. 
+This gives $u_1 + u_2 = -1$. Let $u_2 = s$ (free variable). Then $u_1 = -1 - s$. 
+The vector $bmatrix$. 
+4. Construct General Solution: Use the formula for defective systems: 
+$x(t) = C_1 e^{u)$. 
+Substituting our values: $x(t) = C_1 e^{3t bmatrix right)$.
+
+bmatrix$. 
+bmatrix$. 
+Detailed Step-by-Step Explanation: 
+1. Homogeneous Solution ($x_h$): Solve $det(A-lambda I) = 0 rightarrow (-4-lambda)^2 - 25 = lambda^2+8lambda-9=0$. 
+Eigenvalues: $lambda_1 = -9, lambda_2 = 1$. 
+For $bmatrix$. 
+For $bmatrix$. 
+$x_h(t) = c_1e^{-9tbmatrix$. 
+2. bmatrix$. 
+Substitute into the system: $-2bmatrix$. 
+$Eqs:  2A-5B=3; -5A+2B=-1$. 
+Solving the system: Multiply Eq 1 by 5 and Eq 2 by 2: $10A-25B=15$ and $-10A+4B=-2$. 
+Adding gives $-21B = 13 rightarrow B = -13/21$. Substituting back gives $A = -1/21$. 
+$x_p(t) = bmatrix$. 
+3. bmatrix$. 
+$c_1bmatrix$. 
+Rearrange: $-c_1 + c_2 = 22/21$ and $c_1 + c_2 = 34/21$. 
+Adding: $2c_2 = 56/21 = 8/3 rightarrow c_2 = 4/3$. 
+Subtracting: $2c_1 = 12/21 = 4/7 rightarrow c_1 = 2/7$. 
+Final Solution: $x(t) = bmatrix$.
+28. Solve the Exact method for $2ty^2 + 4 = 2(3 - t^2 y) y'$. 
+Answer: $t^2 y^2 + 4t - 6y = C$. 
+Explanation (Step-by-Step): 
+1. dt rightarrow (2ty^2 + 4) dt - 2(3 - t^2 y) dy = 0$. Distribute: $(2ty^2 + 4) dt + (2t^2 y - 6) dy = 0$. 
+2. partial t = 4ty$. Matches $rightarrow$ Exact. 
+3. Potential Function: $Psi = int M dt = int (2ty^2 + 4) dt = t^2 y^2 + 4t + h(y)$. 
+4. partial y = N rightarrow 2t^2 y + h'(y) = 2t^2 y - 6$. Thus, $h'(y) = -6$. 
+5. Final Result: $h(y) = int -6 dy = -6y$. General solution is $Psi = C rightarrow t^2 y^2 + 4t - 6y = C$.
+
+h(y) dy = int g(t) dt + C$.
+
+29. Solve $y' + 4y = delta(t-3), y(0)=0$ using Laplace Transforms. 
+-4(t-3)$. 
+Explanation (Step-by-Step): 
+1. delta(t-3)$. 
+Using the property $-as$: 
+$(sY(s) - 0) + 4Y(s) = e^{-3s$. 
+2. s+4$. 
+3. -asF(s) = u(t-a)f(t-a)$. 
+Here, $F(s) = -4t$. 
+Applying the shift $a=3$: $y(t) = u(t-3)e^{-4(t-3)$. This represents a system that is at rest until $t=3$, at which point it receives an impulse and begins to decay exponentially.
+
+h(y) dy = int g(t) dt + C$.
+
+30. Find the Laplace transform of $f(t) = 4(t-3)u(t-3)$. 
+s^2$. 
+s^2$. This represents a ramp function that stays at 0 until $t=3$.
+
+31. Model: A 3 kg mass on a spring ($k=12$) with no damping. Initial displacement 2m, released from rest. At $t=1$, an impulse force is applied. 
+Answer: $3y'' + 12y = delta(t-1), y(0)=2, y'(0)=0$. 
+Explanation (Step-by-Step): 
+1. Standard Form: The general second-order equation is $my'' + cy' + ky = F(t)$. 
+2. Identify Constants: Given mass $m=3$, spring constant $k=12$, and "no dampening" means $c=0$. 
+3. Forcing Function: An "impulse force" at $t=1$ is represented by the Dirac delta function $delta(t-1)$. 
+4. Initial Conditions: "Displacement is 2m" gives $y(0)=2$. "Released from rest" implies initial velocity $y'(0)=0$. Combining these gives the differential model: $3y'' + 12y = delta(t-1)$.
+
+h(y) dy = int g(t) dt + C$.
+
+32. Solve $y' + 7y = 4, y(0)=2$. 
+-7t$. 
+Explanation (Step-by-Step): 
+1. 7t$. 
+2. 7t$. 
+3. -7t$. 
+4. 7$.
+
+2t$. 
+(s-2)^2$. 
+(s-2)^2$.
+
+s^2+16$. 
+4u(t-4)sin(4(t-4))$. 
+Explanation (Step-by-Step): 
+1. -2t$. 
+2. 4sin(4t)$. 
+3. 4sin(4(t-4))$.
+
+multicols
+document
